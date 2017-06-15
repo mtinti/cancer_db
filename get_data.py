@@ -6,11 +6,15 @@ Created on Wed Jun 14 17:56:14 2017
 """
 import pandas as pd
 import sqlite3 as db
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.style.use('ggplot')
 
 
 con = db.connect('cancer_mutect.db')
 table_name = 'TCGA_CHOL_mutect'
-
+c = con.cursor()
 
 def test_1():
     query_data = 'SELECT * FROM {tn} '.format(tn=table_name)
@@ -39,7 +43,6 @@ def test_3():
     print  df_data.shape 
 
 def test_4():
-    c = con.cursor()
     c.execute("SELECT name FROM sqlite_master WHERE type='table'")
     tables = c.fetchall()
     for t in tables:
@@ -48,7 +51,6 @@ def test_4():
 
 def main(gene, con):
     q_gene = '\"'+gene+'\"'
-    c = con.cursor()
     c.execute("SELECT name FROM sqlite_master WHERE type='table'")
     tables = c.fetchall()
     tables = [n[0] for n in tables]
@@ -60,18 +62,43 @@ def main(gene, con):
         temp_data['table_name']=table_name
         res_df.append(temp_data)        
     res_df = pd.concat(res_df)
-    print  gene, res_df.shape  
-       
+    #print  gene, res_df.shape
+    #print res_df.head()
+    return res_df
     
-    
+def count(table, in_df):
+    res_df = in_df[in_df['table_name']==table]
+    return float(res_df.shape[0])
+        
+          
 
 if __name__ == '__main__':
     #test_1()
     #test_2()
     #test_3()
     #test_4()
-    main('ENSG00000130669', con)
-    main('ENSG00000137843', con)
-    main('ENSG00000101349', con)    
+    pak4 = main('ENSG00000130669', con)
+    pak5 = main('ENSG00000137843', con)
+    pak6 = main('ENSG00000101349', con)
+    c.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    tables = c.fetchall()
+    tables = [n[0] for n in tables]
+    res = {}
+    for table in tables:
+        ml = np.array([count(table, pak4),count(table, pak5),count(table, pak6)])
+        if ml.sum()>10:
+            ml = ml/ml.max() 
+            res[table]=ml
+    res = pd.DataFrame.from_dict(res)
+    print res.head()
+    res = res.T
+    res.columns = ['pak4','pak5','pak6']
+    res.plot(kind='kde')
+    plt.show()
+    #res.plot(kind='box')
+    #plt.show()    
+    print res.head()
     con.close() 
+    
+    
 
