@@ -71,7 +71,6 @@ def count(table, in_df):
     return float(res_df.shape[0])
         
           
-
 if __name__ == '__main__':
     #test_1()
     #test_2()
@@ -90,6 +89,7 @@ if __name__ == '__main__':
             ml = ml/ml.max() 
             res[table]=ml
     res = pd.DataFrame.from_dict(res)
+    print res.shape
     print res.head()
     res = res.T
     res.columns = ['pak4','pak5','pak6']
@@ -98,7 +98,24 @@ if __name__ == '__main__':
     #res.plot(kind='box')
     #plt.show()    
     print res.head()
+    
+    fog1 = main('ENSG00000179588', con)
+    fog2 = main('ENSG00000169946', con)    
+    res = {}
+    for table in tables:
+        ml = np.array([count(table, fog1),count(table, fog2)])
+        if ml.sum()>10:
+            ml = ml/ml.max() 
+            res[table]=ml
+    res = pd.DataFrame.from_dict(res)
+    res = res.T
+    res.columns = ['fog1','fog2']
+    res.plot(kind='kde')
+    plt.show()    
     con.close() 
+    
+    
+    
     
     
 
