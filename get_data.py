@@ -8,8 +8,9 @@ import pandas as pd
 import sqlite3 as db
 
 
-con = db.connect('cancer_mutect.db')
+con = db.connect('cancer_mutect')
 table_name = 'TCGA_CHOL_mutect'
+
 
 def test_1():
     query_data = 'SELECT * FROM {tn} '.format(tn=table_name)
@@ -38,11 +39,15 @@ def test_3():
     print  df_data.shape 
 
 def test_4():
-        
+    c = con.cursor()
+    c.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    tables = c.fetchall()
+    print tables
 
 if __name__ == '__main__':
     test_1()
     test_2()
     test_3()
+    test_4()
     con.close() 
 
