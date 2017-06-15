@@ -12,12 +12,12 @@ from https://portal.gdc.cancer.gov/
 - download manifest
 
 to download dataset
-https://gdc.cancer.gov/access-data/gdc-data-transfer-tool
-https://docs.gdc.cancer.gov/Data_Transfer_Tool/Users_Guide/Data_Download_and_Upload/
+- https://gdc.cancer.gov/access-data/gdc-data-transfer-tool
+- https://docs.gdc.cancer.gov/Data_Transfer_Tool/Users_Guide/Data_Download_and_Upload/
 
 
 dump pandas to sql
-https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.to_sql.html
+- https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.to_sql.html
 
 tutorial mysql
-http://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html
+- http://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html
