@@ -77,8 +77,11 @@ if __name__ == '__main__':
     #test_3()
     #test_4()
     pak4 = main('ENSG00000130669', con)
+    #pak4.to_csv('pak4.csv')
     pak5 = main('ENSG00000137843', con)
+    
     pak6 = main('ENSG00000101349', con)
+    pak6.to_csv('pak6.csv')
     c.execute("SELECT name FROM sqlite_master WHERE type='table'")
     tables = c.fetchall()
     tables = [n[0] for n in tables]
@@ -89,6 +92,7 @@ if __name__ == '__main__':
             ml = ml/ml.max() 
             res[table]=ml
     res = pd.DataFrame.from_dict(res)
+    res.to_csv('pakfam.csv')
     print res.shape
     print res.head()
     res = res.T
@@ -113,6 +117,8 @@ if __name__ == '__main__':
     res.plot(kind='kde')
     plt.show()    
     con.close() 
+    
+    
     
     
     
