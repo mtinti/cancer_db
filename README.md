@@ -21,3 +21,15 @@ dump pandas to sql
 
 tutorial mysql
 - http://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html
+
+##to do
+###compare the rate of Variant_Classification mutation in ohonlog family members 
+-Silent vs Missense_Mutation
+-Silent vs (Nonsense_Mutation + Frame_Shift_Del + Frame_Shift_Ins)
+-Silent vs 3'UTR+5'UTR
+
+###compare the mutation rate of kinase activation site in ohonlog family members 
+
+
+
+ 
