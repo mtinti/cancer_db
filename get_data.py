@@ -78,9 +78,9 @@ if __name__ == '__main__':
     #test_4()
     pak4 = main('ENSG00000130669', con)
     #pak4.to_csv('pak4.csv')
-    pak5 = main('ENSG00000137843', con)
+    pak5 = main('ENSG00000101349', con)
     
-    pak6 = main('ENSG00000101349', con)
+    pak6 = main('ENSG00000137843', con)
     pak6.to_csv('pak6.csv')
     c.execute("SELECT name FROM sqlite_master WHERE type='table'")
     tables = c.fetchall()
