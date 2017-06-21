@@ -32,7 +32,7 @@ def test_2():
     #print query_data
     df_data = pd.read_sql(query_data, con)
     print df_data.iloc[:3,:3]
-    print  df_data.shape  
+    print  df_data.shape
 
 def test_3():
     gene = '\"ENSG00000109189\"'
@@ -48,6 +48,13 @@ def test_4():
     for t in tables:
         print t[0]
 
+def count(table, in_df):   #Returns the number of mutations in a given table of a given dataframe
+    res_df = in_df[in_df['table_name']==table]
+    return float(res_df.shape[0])
+
+def count_var_class(table, in_df, var_class):
+    res_df = in_df[(in_df['table_name']==table) & (in_df['Variant_Classification']==var_class)]
+    return float(res_df.shape[0])
 
 def main(gene, con):
     q_gene = '\"'+gene+'\"'
@@ -66,22 +73,23 @@ def main(gene, con):
     #print res_df.head()
     return res_df
     
-def count(table, in_df):
-    res_df = in_df[in_df['table_name']==table]
-    return float(res_df.shape[0])
-        
-          
+
+            
 if __name__ == '__main__':
     #test_1()
     #test_2()
     #test_3()
     #test_4()
     pak4 = main('ENSG00000130669', con)
-    #pak4.to_csv('pak4.csv')
+    pak4.to_csv('pak4.csv')
+    
     pak5 = main('ENSG00000101349', con)
+    pak5.to_csv('pak5.csv')
     
     pak6 = main('ENSG00000137843', con)
     pak6.to_csv('pak6.csv')
+    
+    
     c.execute("SELECT name FROM sqlite_master WHERE type='table'")
     tables = c.fetchall()
     tables = [n[0] for n in tables]
@@ -97,11 +105,25 @@ if __name__ == '__main__':
     print res.head()
     res = res.T
     res.columns = ['pak4','pak5','pak6']
-    res.plot(kind='kde')
+    #res.plot(kind='kde')
+    #plt.show()
+    res.plot(kind='box')
     plt.show()
-    #res.plot(kind='box')
-    #plt.show()    
+    
+    
+    res = {}
+    for table in tables:
+        vcr = np.array([count_var_class(table, pak4, 'Silent'), count_var_class(table, pak4, 'Missense_Mutation')])
+        if vcr.sum()>5:
+            vcr = vcr/vcr.max() 
+            res[table]=vcr
+    res = pd.DataFrame.from_dict(res)
+    res.to_csv('pak4_syn_vs_miss.csv')
+    print res.shape
     print res.head()
+    res = res.T
+    res.columns = ['Synonymous','Missense']
+    
     
     fog1 = main('ENSG00000179588', con)
     fog2 = main('ENSG00000169946', con)    
@@ -114,8 +136,8 @@ if __name__ == '__main__':
     res = pd.DataFrame.from_dict(res)
     res = res.T
     res.columns = ['fog1','fog2']
-    res.plot(kind='kde')
-    plt.show()    
+    #res.plot(kind='kde')
+    #plt.show()    
     con.close() 
     
     
