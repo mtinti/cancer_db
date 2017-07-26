@@ -33,11 +33,11 @@ def max_index(dfall):
 
 
 def plot_clustered_stacked(dfall, labels=None,
-                           title="Distribution of Mutation Types between PAK Genes for Given Cancer Types",
+                           title="Distribution of Mutation Impacts between PAK Genes for Given Cancer Types",
                            xlab="Cancer Type", 
                            ylab="Number of Mutations",
                            H="/", **kwargs):
-    """Given a list of dataframes, with identical columns and index, create
+    """Given a list of dataframes, with identical columns, create
         a clustered stacked bar plot. labels is a list of the names of the 
         dataframe, used for the legend title is a string for the title of 
         the plot H is the hatch used for identification of the different 
@@ -87,16 +87,25 @@ def plot_clustered_stacked(dfall, labels=None,
     return axe
 
 # call in csv files as dataframes
-df1 = pd.read_csv("pak4_var_class_count.csv", parse_dates=False, index_col=0)
+#df1 = pd.read_csv("pak4_impact_count.csv", parse_dates=False, index_col=0)
+#
+#df2 = pd.read_csv("pak5_impact_count.csv", parse_dates=False, index_col=0)
+#
+#df3 = pd.read_csv("pak6_impact_count.csv", parse_dates=False, index_col=0)
 
-df2 = pd.read_csv("pak5_var_class_count.csv", parse_dates=False, index_col=0)
+df1 = pd.read_csv("Mutect_db/mutations_by_sample_number.csv", parse_dates=False, index_col=0)
 
-df3 = pd.read_csv("pak6_var_class_count.csv", parse_dates=False, index_col=0)
+df2 = pd.read_csv("Muse_db/mutations_by_sample_number_muse.csv", parse_dates=False, index_col=0)
+
+df3 = pd.read_csv("Varscan_db/mutations_by_sample_number_varscan.csv", parse_dates=False, index_col=0)
+
+df4 = pd.read_csv("SomaticSniper_db/mutations_by_sample_number_somaticsniper.csv", parse_dates=False, index_col=0)
 
 # create set of indexes from all dataframes
 index_list = set(df1.index)
 index_list.update(df2.index)
 index_list.update(df3.index)
+index_list.update(df4.index)
 index_list = list(index_list) # convert to list
 index_list.sort()
 
@@ -104,6 +113,7 @@ index_list.sort()
 df1 = df1.reindex(index_list)
 df2 = df2.reindex(index_list)
 df3 = df3.reindex(index_list)
+df4 = df4.reindex(index_list)
 
 
 def main(dfs, labels):
@@ -111,4 +121,4 @@ def main(dfs, labels):
         
 
 if __name__=='__main__':
-    main([df1, df2, df3],["PAK4", "PAK5", "PAK6"])
+    main([df1, df2, df3, df4],["Mutect", "Muse", "Varscan", "SomaticSniper"])

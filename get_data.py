@@ -56,6 +56,10 @@ def count_var_class(table, in_df, var_class):
     res_df = in_df[(in_df['table_name']==table) & (in_df['Variant_Classification']==var_class)]
     return float(res_df.shape[0])
 
+def count_impact(table, in_df, impact):
+    res_df = in_df[(in_df['table_name']==table) & (in_df['IMPACT']==impact)]
+    return float(res_df.shape[0])
+
 def count_rows(table):   #returns the number of rows in each table
     c.execute('SELECT Count(rowid) FROM {tn}' .format(tn=table))
     rows = c.fetchall()
@@ -69,7 +73,7 @@ def count_samples(table):   #Returns the number of unique samples in each table
     return ids
 
 def main(gene, con):
-    q_gene = '\"'+gene+'\"'
+    q_gene = str(gene)
     c.execute("SELECT name FROM sqlite_master WHERE type='table'")
     tables = c.fetchall()
     tables = [n[0] for n in tables]
@@ -92,14 +96,14 @@ if __name__ == '__main__':
     #test_2()
     #test_3()
     #test_4()
-    pak4 = main('ENSG00000130669', con)
-    pak4.to_csv('pak4.csv')
-    
-    pak5 = main('ENSG00000101349', con)
-    pak5.to_csv('pak5.csv')
-    
-    pak6 = main('ENSG00000137843', con)
-    pak6.to_csv('pak6.csv')
+#    pak4 = main('ENSG00000130669', con)
+#    pak4.to_csv('pak4.csv')
+#    
+#    pak5 = main('ENSG00000101349', con)
+#    pak5.to_csv('pak5.csv')
+#    
+#    pak6 = main('ENSG00000137843', con)
+#    pak6.to_csv('pak6.csv')
     
     
     c.execute("SELECT name FROM sqlite_master WHERE type='table'")
@@ -107,7 +111,7 @@ if __name__ == '__main__':
     tables = [n[0] for n in tables]
     
     
-#    res = {}
+#    res = {}   #iterates through tables (cancer types) and returns the number of mutations as a ratio of either the maximum or sum of mutations
 #    for table in tables:
 #        ml = np.array([count(table, pak4),count(table, pak5),count(table, pak6)])
 #        if ml.sum()>10:
@@ -126,7 +130,7 @@ if __name__ == '__main__':
 #    plt.show()
     
     
-#    res = {}
+#    res = {}   #iterates through tables and returns the number of mutations for each variant_classifications per cancer type
 #    for table in tables:
 #        vc = np.array([count_var_class(table, pak4, 'Silent'), 
 #                       count_var_class(table, pak4, 'Missense_Mutation'),
@@ -142,19 +146,37 @@ if __name__ == '__main__':
 #    res = res.T
 #    res.columns = ['Synonymous', 'Missense', 'Nonsense, FS_Ins, FS_Del', '3\' or 5\' UTR']
 #    res.to_csv('pak4_var_class_ratio.csv')
+
+
+#    res = {}   #iterates through tables and returns the number of mutations for each impact type per cancer type
+#    for table in tables:
+#        vc = np.array([count_impact(table, pak6, 'LOW'), 
+#                       count_impact(table, pak6, 'MODERATE'),
+#                       count_impact(table, pak6, 'HIGH'),
+#                       count_impact(table, pak6, 'MODIFIER')])
+#        if vc.sum()>0:   #currently no threshold
+#            #vc = vc/vc.max()
+#            #vc = vc/vc.sum()
+#            res[table]=vc
+#    res = pd.DataFrame.from_dict(res)
+#    print res.shape
+#    print res.head()
+#    res = res.T
+#    res.columns = ['LOW', 'MODERATE', 'HIGH', 'MODIFIER']
+#    res.to_csv('pak6_impact_count.csv')
     
     
-    rows_dict = {}   #iterates through tables and returns number of rows in a dataframe divided by the number of unique samples in each table
-    counter = 0
-    for table in tables:
-        counter += 1
-        print counter
-        mutes = count_rows(table)/count_samples(table)
-        rows_dict[table] = mutes
-    print rows_dict
-    rows_dict = pd.DataFrame.from_dict(rows_dict, orient='index')
-    print rows_dict
-    rows_dict.to_csv('mutations_by_sample_number.csv')
+#    rows_dict = {}   #iterates through tables and returns number of rows in a dataframe divided by the number of unique samples in each table
+#    counter = 0
+#    for table in tables:
+#        counter += 1
+#        print counter
+#        mutes = count_rows(table)/count_samples(table)
+#        rows_dict[table] = mutes
+#    print rows_dict
+#    rows_dict = pd.DataFrame.from_dict(rows_dict, orient='index')
+#    print rows_dict
+#    rows_dict.to_csv('mutations_by_sample_number_somaticsniper.csv')
     
     
 #    fog1 = main('ENSG00000179588', con)
@@ -174,6 +196,19 @@ if __name__ == '__main__':
 #    #res.plot(kind='kde')
 #    #plt.show()    
 
+
+
+#    tp53 = main('ENSG00000141510', con)
+#    tp53.to_csv('tp53.csv')
+#    tp63 = main('ENSG00000073282', con)
+#    tp63.to_csv('tp63.csv')
+#    tp73 = main('ENSG00000078900', con)
+#    tp73.to_csv('tp73.csv')
+#    res = {}
+#    for table in tables:
+#        ml = np.array([count(table, tp53), count(table, tp63), count(table, tp73)])
+#        if ml.sum()>10:
+#            
     con.close() 
     
     

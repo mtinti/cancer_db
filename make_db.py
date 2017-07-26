@@ -46,7 +46,7 @@ def dump(in_path, con, c):
         
         
 
-def main(tag='mutect', db_name='cancer_mutect.db'):      
+def main(tag='somaticsniper', db_name='cancer_somaticsniper.db'):      
     con = db.connect(db_name)
     c = con.cursor()
     a=0
@@ -64,7 +64,7 @@ def main(tag='mutect', db_name='cancer_mutect.db'):
     con.close()         
 
 if __name__ == '__main__':
-    main(tag='mutect', db_name='cancer_mutect.db')
+    main(tag='somaticsniper', db_name='cancer_somaticsniper.db')
     
    
     #test_1()
